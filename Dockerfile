@@ -1,10 +1,10 @@
-## -*- docker-image-name: "armbuild/scw-distrib-gentoo:latest" -*-
+## -*- docker-image-name: "scaleway/gentoo:latest" -*-
 FROM armbuild/gentoo:stage3
 MAINTAINER Scaleway <opensource@scaleway.com> (@scaleway)
 
 
 # Environment
-ENV SCW_BASE_IMAGE armbuild/scw-gentoo:latest
+ENV SCW_BASE_IMAGE scaleway/gentoo
 
 
 # Patch rootfs for docker-based builds
