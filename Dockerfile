@@ -1,10 +1,10 @@
-## -*- docker-image-name: "armbuild/scw-distrib-gentoo:latest" -*-
+## -*- docker-image-name: "scaleway/gentoo:latest" -*-
 FROM armbuild/gentoo:stage3
 MAINTAINER Scaleway <opensource@scaleway.com> (@scaleway)
 
 
 # Environment
-ENV SCW_BASE_IMAGE armbuild/scw-gentoo:latest
+ENV SCW_BASE_IMAGE scaleway/gentoo
 
 
 # Patch rootfs for docker-based builds
@@ -36,14 +36,11 @@ RUN locale-gen \
 
 # Enable services
 RUN true \
- && rc-update add disconnect-extra-volumes shutdown \
  && rc-update add initramfs-shutdown shutdown \
- && rc-update add nbd-root-disconnect shutdown \
  && rc-update add ntpd default \
  && rc-update add set-confd-hostname boot \
  && rc-update add ssh-keys default \
  && rc-update add sshd default \
- && rc-update add sync-connect-extra-volumes boot \
  && rc-update add sync-kernel-extra sysinit \
  && rc-update add syslog-ng default \
  && rc-status
