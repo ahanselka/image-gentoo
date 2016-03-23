@@ -44,13 +44,13 @@ RUN emerge -v \
 RUN mkdir -p /var/lib/misc
 
 
+# Add patches
+COPY ./overlay/ ./overlay-image-tools/ /
+
+
 # Set default locale to en_US.UTF-8
 RUN locale-gen \
  && eselect locale set en_US.utf8
-
-
-# Add patches
-ADD ./overlay/ ./overlay-image-tools/ /
 
 
 # Toggle services
