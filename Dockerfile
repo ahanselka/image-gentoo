@@ -27,7 +27,6 @@ RUN mkdir -p /usr/portage/{distfiles,metadata,packages} \
  && env-update
 
 
-
 # Install packages
 RUN emerge -v \
     app-admin/logrotate \
@@ -41,8 +40,8 @@ RUN emerge -v \
     sys-block/nbd
 
 
-# Add patches
-ADD ./overlay/ ./overlay-image-tools/ /
+# Create /var/lib/misc, required by service 'random' at stop
+RUN mkdir -p /var/lib/misc
 
 
 # Set default locale to en_US.UTF-8
@@ -50,24 +49,22 @@ RUN locale-gen \
  && eselect locale set en_US.utf8
 
 
-# Enable services
-RUN true \
- && rc-update add initramfs-shutdown shutdown \
+# Add patches
+ADD ./overlay/ ./overlay-image-tools/ /
+
+
+# Toggle services
+RUN mkdir -p $(readlink -f /run/openrc) \
+ && rc-update add scw-initramfs-shutdown shutdown \
  && rc-update add ntpd default \
- && rc-update add set-confd-hostname boot \
- && rc-update add ssh-keys default \
+ && rc-update add scw-hostname boot \
+ && rc-update add scw-ssh-keys default \
+ && rc-update add scw-sshd-keys default \
  && rc-update add sshd default \
- && rc-update add sync-kernel-extra sysinit \
+ && rc-update add scw-sync-kernel-extra sysinit \
  && rc-update add syslog-ng default \
+ && rc-update del keymaps boot \
  && rc-status
-
-
-# Disable uneeded services
-RUN rc-update del keymaps boot
-
-
-# Create /var/lib/misc, required by service 'random' at stop
-RUN mkdir -p /var/lib/misc
 
 
 # Cleanup
