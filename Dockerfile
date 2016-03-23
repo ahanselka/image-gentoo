@@ -18,6 +18,16 @@ COPY ./overlay-image-tools/usr/local/sbin/scw-builder-enter /usr/local/sbin/
 RUN /usr/local/sbin/scw-builder-enter
 
 
+# Sync portage
+RUN mkdir -p /usr/portage/{distfiles,metadata,packages} \
+ && chown -R portage:portage /usr/portage \
+ && echo "masters = gentoo" > /usr/portage/metadata/layout.conf \
+ && emerge-webrsync -q \
+ && eselect news read new \
+ && env-update
+
+
+
 # Install packages
 RUN emerge -v \
     app-admin/logrotate \
