@@ -1,0 +1,2 @@
+IMAGE_FLAVORS="common"
+IMAGE_TOOLS_CHECKOUT="master"
