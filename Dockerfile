@@ -1,16 +1,21 @@
 ## -*- docker-image-name: "scaleway/gentoo:latest" -*-
-FROM armbuild/gentoo:stage3
+FROM gentoo/stage3-amd64
+# FIXME: check to switch to amd64-hardened
+# following 'FROM' lines are used dynamically thanks do the image-builder
+# which dynamically update the Dockerfile if needed.
+#FROM armbuild/gentoo:stage3	# arch=armv7l
+
+
 MAINTAINER Scaleway <opensource@scaleway.com> (@scaleway)
 
 
 # Environment
-ENV SCW_BASE_IMAGE scaleway/gentoo
+ENV SCW_BASE_IMAGE=scaleway/gentoo:latest
 
 
 # Patch rootfs for docker-based builds
-RUN emerge -v net-misc/curl \
- && curl -Lq http://j.mp/scw-skeleton | FLAVORS=common,docker-based,openrc bash -e \
- && /usr/local/sbin/builder-enter
+COPY ./overlay-image-tools/usr/local/sbin/scw-builder-enter /usr/local/sbin/
+RUN /usr/local/sbin/scw-builder-enter
 
 
 # Install packages
@@ -18,6 +23,7 @@ RUN emerge -v \
     app-admin/logrotate \
     app-admin/syslog-ng \
     net-firewall/iptables \
+    net-misc/curl \
     net-misc/dhcpcd \
     net-misc/ntp \
     sys-apps/iproute2 \
@@ -26,7 +32,7 @@ RUN emerge -v \
 
 
 # Add patches
-ADD ./patches/etc /etc
+ADD ./overlay/ ./overlay-image-tools/ /
 
 
 # Set default locale to en_US.UTF-8
@@ -54,8 +60,9 @@ RUN rc-update del keymaps boot
 RUN mkdir -p /var/lib/misc
 
 
+# Cleanup
 RUN rm -rf /var/tmp/portage/* /usr/portage/distfiles/*
 
 
 # Clean rootfs from image-builder
-RUN /usr/local/sbin/builder-leave
+RUN /usr/local/sbin/scw-builder-leave
