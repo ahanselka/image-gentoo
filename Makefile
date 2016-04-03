@@ -15,7 +15,7 @@ IMAGE_NAME =		Gentoo
 # This is specific to distribution images
 # -- to fetch latest code, run 'make sync-image-tools'
 IMAGE_TOOLS_FLAVORS =	common,docker-based,openrc
-IMAGE_TOOLS_CHECKOUT =	0e29bd0b0041c100a11857b8639bf208a5f3c2b0
+IMAGE_TOOLS_CHECKOUT =	764a58e59811d5f6217a3f71a4e009d6ec3e5138
 
 
 ## Image tools  (https://github.com/scaleway/image-tools)
